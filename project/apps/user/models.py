@@ -16,6 +16,10 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault('is_active', True)
         return self.create_user(email, fio, password=password, **extra_fields)
 
+    class Meta:
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
+
 class User(AbstractUser, PermissionsMixin):
     email = models.EmailField(max_length=255, unique=True)
     fio = models.CharField(max_length=255)
@@ -29,4 +33,4 @@ class User(AbstractUser, PermissionsMixin):
     REQUIRED_FIELDS = ['fio']
 
     def __str__(self):
-        return self.email
+        return f'{self.email} - {self.fio}'
