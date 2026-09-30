@@ -41,6 +41,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    #Локальные приложения
+    'apps.user', #Отвечает за пользователей их инициализацию и регистрацию
+    'apps.orders', #Заказы пользователей
+    'apps.product', #Отвечает за рейсы, их создание и изменение админом
+    'apps.cart', #Корзина с рейсами
 ]
 
 MIDDLEWARE = [
@@ -105,6 +110,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+AUTH_USER_MODEL = 'user.User'
 
 
 # Internationalization
