@@ -7,7 +7,7 @@ class IsClient(BasePermission):
         else:
             return False
 
-class IsAdminUser(BasePermission):
+class IsAdmin(BasePermission):
     def has_permission(self, request, view):
         if request.user.is_authenticated and request.user.is_staff:
             return True
