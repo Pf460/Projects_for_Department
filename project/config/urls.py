@@ -25,6 +25,7 @@ urlpatterns = [
     path('api-flight/', include('apps.user.urls')),
     path('api-flight/', include('apps.product.urls')),
     path('api-flight/', include('apps.cart.urls')),
+    path('api-flight/', include('apps.orders.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
