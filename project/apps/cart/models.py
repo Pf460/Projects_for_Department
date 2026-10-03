@@ -13,4 +13,4 @@ class CartItem(models.Model):
         verbose_name_plural = 'Корзина'
 
     def __str__(self):
-        return f'{self.user.email}:\n{self.product.title} - {self.product.description} - {self.product.price}'
+        return f'{self.user.email}:\n{self.product.name} - {self.product.description} - {self.product.price}'
