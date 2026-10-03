@@ -18,8 +18,6 @@ REST API сервиса бронирования авиабилетов для �
 
 -AviaProj/
 
---.venv/
-
 --collection/
 
 ---Api-Flight.postman_collection.json
