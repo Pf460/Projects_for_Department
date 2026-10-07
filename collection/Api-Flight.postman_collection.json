@@ -37,7 +37,7 @@
                 "signup"
               ]
             },
-            "description": "Регистрация нового пользователя\n\nBody:  \nemail (обязательно)  \nfio (обязательно)  \npassword (обязательно)  \navatar (опционально файлом / default.jpg лежит в папке проекта)\n\nУспех - 201:  \n{\"user_token\": \"...\"}\n\nОшибка - 422:  \nValidationError (ошибка валидности email или пароля)"
+            "description": "Регистрация нового пользователя\n\nBody:  \nemail (обязательно)  \nfio (обязательно)  \npassword (обязательно)  \navatar (опционально файлом / default.jpg лежит в папке проекта)\n\nУспех - 201:  \n{\"refresh\": \"...\" ,\"user_token\": \"...\"}\n\nОшибка - 422:  \nValidationError (ошибка валидности email или пароля)"
           },
           "response": []
         },
@@ -64,23 +64,23 @@
                 "login"
               ]
             },
-            "description": "Аутентификация пользователя\n\nBody:  \nemail (обязательно)  \npassword (обязательно)\n\nУспех - 200:  \n{\"user_token\": \"...\"}\n\nОшибка - 401:  \n{\"password\": \"Login failed\"}\n\nОшибка - 422:  \nValidationError"
+            "description": "Аутентификация пользователя\n\nBody:  \nemail (обязательно)  \npassword (обязательно)\n\nУспех - 200:  \n{\"refresh\": \"...\",\"user_token\": \"...\"}\n\nОшибка - 401:  \n{\"password\": \"Login failed\"}\n\nОшибка - 422:  \nValidationError"
           },
           "response": []
         },
         {
           "name": "Logout",
           "request": {
-            "method": "GET",
+            "method": "POST",
             "header": [
               {
                 "key": "Authorization",
-                "value": "Token {{user_token/admin_token}}"
+                "value": "Bearer {{user_token}}"
               }
             ],
             "body": {
               "mode": "raw",
-              "raw": "",
+              "raw": "{\r\n    \"refresh\": \"...\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -96,7 +96,7 @@
                 "logout"
               ]
             },
-            "description": "Выход из аккаунта, очистка токена\n\nHeaders:  \nAuthorization: Token {{user_token/admin_token}}\n\nУспех - 200:  \n{\"message\": \"logout\"}\n\nОшибка - 403:  \n{\"message\": \"Login failed\"}"
+            "description": "Выход из аккаунта, очистка токена\n\nHeaders:  \nAuthorization: Bearer {{user_token/admin_token}}\n\nBody:\n\n{\"refresh\": \"...\"}\n\nУспех - 200:  \n{\"message\": \"logout\"}\n\nОшибка - 403:  \n{\"message\": \"Login failed\"}"
           },
           "response": []
         },
@@ -119,7 +119,7 @@
                 "profile"
               ]
             },
-            "description": "Просмотр профиля\n\nHeaders:  \nAuthorization: Token {{user_token/admin_token}}\n\nУспех - 200:  \n{\"user\": {\"id\": 1, \"email\": \"...\", \"fio\": \"...\", \"avatar\": \"...\"}}\n\nОшибка - 403:  \n{\"message\": \"Login failed\"}"
+            "description": "Просмотр профиля\n\nHeaders:  \nAuthorization: Bearer {{user_token/admin_token}}\n\nУспех - 200:  \n{\"user\": {\"id\": 1, \"email\": \"...\", \"fio\": \"...\", \"avatar\": \"...\"}}\n\nОшибка - 403:  \n{\"message\": \"Login failed\"}"
           },
           "response": []
         },
@@ -151,30 +151,7 @@
                 "profile"
               ]
             },
-            "description": "Редактирование личных данных\n\nHeaders:  \nAuthorization: Token {{user_token/admin_token}}\n\nBody:  \nfio (опционально)  \navatar (опционально)\n\nУспех - 200:  \n{\"message\": \"data updated successfully\"}\n\nОшибка - 403:  \n{\"message\": \"Login failed\"}\n\nОшибка - 422:  \nValidationError"
-          },
-          "response": []
-        },
-        {
-          "name": "Profile_GET_EDIT",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Token {{user_token/admin_token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{host}}/profile",
-              "host": [
-                "{{host}}"
-              ],
-              "path": [
-                "profile"
-              ]
-            },
-            "description": "Просмотр профиля c изменёнными данными\n\nHeaders:  \nAuthorization: Token {{user_token/admin_token}}\n\nУспех - 200:  \n{\"user\": {\"id\": 1, \"email\": \"...\", \"fio\": \"...\", \"avatar\": \"...\"}}\n\nОшибка - 403:  \n{\"message\": \"Login failed\"}"
+            "description": "Редактирование личных данных\n\nHeaders:  \nAuthorization: Bearer {{user_token/admin_token}}\n\nBody:  \nfio (опционально)  \navatar (опционально)\n\nУспех - 200:  \n{\"message\": \"data updated successfully\"}\n\nОшибка - 403:  \n{\"message\": \"Login failed\"}\n\nОшибка - 422:  \nValidationError"
           },
           "response": []
         }
@@ -226,7 +203,7 @@
                 "1"
               ]
             },
-            "description": "Добавление авиабилета в корзину\n\nURL:  \nproduct_id (идентификатор рейса, в URL)\n\nHeaders:  \nAuthorization: Token {{user_token}}\n\nУспех - 201:  \n{\"message\": \"Product add to card\"}\n\nОшибка - 403:  \n{\"message\": \"Forbidden for you\"}\n\nОшибка - 404:  \n{\"message\": \"Not found\"}"
+            "description": "Добавление авиабилета в корзину\n\nURL:  \nproduct_id (идентификатор рейса, в URL)\n\nHeaders:  \nAuthorization: Bearer{{user_token}}\n\nУспех - 201:  \n{\"message\": \"Product add to card\"}\n\nОшибка - 403:  \n{\"message\": \"Forbidden for you\"}\n\nОшибка - 404:  \n{\"message\": \"Not found\"}"
           },
           "response": []
         },
@@ -249,7 +226,7 @@
                 "cart"
               ]
             },
-            "description": "Просмотр своей корзины\n\nHeaders:  \nAuthorization: Token {{user_token}}\n\nУспех - 200:  \n\\[{\"id\": \"...\", \"product_id\": \"...\", \"name\": \"...\", \"description\": \"...\", \"price\": \"...\"}\\]\n\nОшибка - 403:  \n{\"message\": \"Forbidden for you\"}"
+            "description": "Просмотр своей корзины\n\nHeaders:  \nAuthorization: Bearer{{user_token}}\n\nУспех - 200:  \n\\[{\"id\": \"...\", \"product_id\": \"...\", \"name\": \"...\", \"description\": \"...\", \"price\": \"...\"}\\]\n\nОшибка - 403:  \n{\"message\": \"Forbidden for you\"}"
           },
           "response": []
         },
@@ -273,7 +250,7 @@
                 "1"
               ]
             },
-            "description": "Удаление авиабилета из корзины\n\nURL:  \nid (идентификатор записи в корзине, в URL)\n\nHeaders:  \nAuthorization: Token {{user_token}}\n\nУспех - 200:  \n{\"message\": \"Item removed from cart\"}\n\nОшибка - 403:  \n{\"message\": \"Forbidden for you\"}\n\nОшибка - 404:  \n{\"message\": \"Not found\"}"
+            "description": "Удаление авиабилета из корзины\n\nURL:  \nid (идентификатор записи в корзине, в URL)\n\nHeaders:  \nAuthorization: Bearer {{user_token}}\n\nУспех - 200:  \n{\"message\": \"Item removed from cart\"}\n\nОшибка - 403:  \n{\"message\": \"Forbidden for you\"}\n\nОшибка - 404:  \n{\"message\": \"Not found\"}"
           },
           "response": []
         }
@@ -310,7 +287,7 @@
                 "product"
               ]
             },
-            "description": "Добавление нового авиабилета\n\nHeaders:  \nAuthorization: Token {{admin_token}}\n\nBody:  \nname (обязательно)  \ndescription (обязательно)  \nprice (обязательно)\n\nУспех - 201:  \n{\"id\": 5, \"message\": \"Product added\"}\n\nОшибка - 403:  \n{\"message\": \"Forbidden for you\"}\n\nОшибка - 422:  \nValidationError"
+            "description": "Добавление нового авиабилета\n\nHeaders:  \nAuthorization: Bearer{{admin_token}}\n\nBody:  \nname (обязательно)  \ndescription (обязательно)  \nprice (обязательно)\n\nУспех - 201:  \n{\"id\": 5, \"message\": \"Product added\"}\n\nОшибка - 403:  \n{\"message\": \"Forbidden for you\"}\n\nОшибка - 422:  \nValidationError"
           },
           "response": []
         },
@@ -343,7 +320,7 @@
                 "4"
               ]
             },
-            "description": "Редактирование авиабилета\n\nURL:  \nid (идентификатор рейса, в URL)\n\nHeaders:  \nAuthorization: Token {{admin_token}}\n\nBody:  \nname (опционально)  \ndescription (опционально)  \nprice (опционально)\n\nУспех - 200:  \n{\"id\": 1, \"name\": \"...\", \"description\": \"...\", \"price\": 5000}\n\nОшибка - 403:  \n{\"message\": \"Forbidden for you\"}\n\nОшибка - 404:  \n{\"message\": \"Not found\"}\n\nОшибка - 422:  \nValidationError"
+            "description": "Редактирование авиабилета\n\nURL:  \nid (идентификатор рейса, в URL)\n\nHeaders:  \nAuthorization: Bearer {{admin_token}}\n\nBody:  \nname (опционально)  \ndescription (опционально)  \nprice (опционально)\n\nУспех - 200:  \n{\"id\": 1, \"name\": \"...\", \"description\": \"...\", \"price\": 5000}\n\nОшибка - 403:  \n{\"message\": \"Forbidden for you\"}\n\nОшибка - 404:  \n{\"message\": \"Not found\"}\n\nОшибка - 422:  \nValidationError"
           },
           "response": []
         },
@@ -367,7 +344,7 @@
                 "4"
               ]
             },
-            "description": "Удаление авиабилета\n\nURL:  \nid (идентификатор рейса, в URL)\n\nHeaders:  \nAuthorization: Token {{admin_token}}\n\nУспех - 200:  \n{\"message\": \"Product removed\"}\n\nОшибка - 403:  \n{\"message\": \"Forbidden for you\"}\n\nОшибка - 404:  \n{\"message\": \"Not found\"}"
+            "description": "Удаление авиабилета\n\nURL:  \nid (идентификатор рейса, в URL)\n\nHeaders:  \nAuthorization: Bearer{{admin_token}}\n\nУспех - 200:  \n{\"message\": \"Product removed\"}\n\nОшибка - 403:  \n{\"message\": \"Forbidden for you\"}\n\nОшибка - 404:  \n{\"message\": \"Not found\"}"
           },
           "response": []
         }
@@ -395,7 +372,7 @@
                 "order"
               ]
             },
-            "description": "Просмотр своей истории бронирований\n\nHeaders:  \nAuthorization: Token {{user_token}}\n\nУспех - 200:  \n\\[{\"id\": 1, \"products\": \\[1, 1, 2\\], \"order_price\": 21200}\\]\n\nОшибка - 403:  \n{\"message\": \"Forbidden for you\"}"
+            "description": "Просмотр своей истории бронирований\n\nHeaders:  \nAuthorization: Bearer {{user_token}}\n\nУспех - 200:  \n\\[{\"id\": 1, \"products\": \\[1, 1, 2\\], \"order_price\": 21200}\\]\n\nОшибка - 403:  \n{\"message\": \"Forbidden for you\"}"
           },
           "response": []
         },
@@ -418,7 +395,7 @@
                 "order"
               ]
             },
-            "description": "Оформление бронирования из корзины\n\nHeaders:  \nAuthorization: Token {{user_token}}\n\nУспех - 201:  \n{\"order_id\": 1, \"message\": \"Order is processed\"}\n\nОшибка - 422:  \n{\"error\": {\"code\": 422, \"message\": \"Cart is empty\"}}\n\nОшибка - 403:  \n{\"message\": \"Forbidden for you\"}"
+            "description": "Оформление бронирования из корзины\n\nHeaders:  \nAuthorization: Bearer {{user_token}}\n\nУспех - 201:  \n{\"order_id\": 1, \"message\": \"Order is processed\"}\n\nОшибка - 422:  \n{\"error\": {\"code\": 422, \"message\": \"Cart is empty\"}}\n\nОшибка - 403:  \n{\"message\": \"Forbidden for you\"}"
           },
           "response": []
         }

@@ -16,7 +16,7 @@ class DetailCartItem(APIView):
         product = get_object_or_404(Product, id=id)
         CartItem.objects.create(user=request.user, product=product)
         return Response(
-            {'message': 'Product add to card'},
+            {'message': 'Product add to cart'},
             status=status.HTTP_201_CREATED
         )
 
@@ -38,7 +38,7 @@ class ListCartItems(APIView):
     permission_classes = [IsClient]
 
     def get(self,request):
-        cart_items = CartItem.objects.filter(user=request.user.id)
+        cart_items = CartItem.objects.filter(user=request.user.id).select_related('product') #select подтягивает все продукты для корзины со связью одна корзина много продуктов
         serializer = CartItemSerializer(cart_items, many=True)
         return Response(serializer.data)
 

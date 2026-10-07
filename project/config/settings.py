@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/6.1/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+from datetime import timedelta #для определения жизник токенов
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,7 +26,7 @@ load_dotenv(BASE_DIR / '.env')
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG')
+DEBUG = os.getenv('DEBUG').lower() in ('true', '1', 'yes')
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',')
 
@@ -33,15 +34,18 @@ ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',')
 # Application definition
 
 INSTALLED_APPS = [
-    #Стоковые приложения из коробки+пакет для работы с RestAPI
+    #Стоковые приложения из коробки
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    #RESTAPI+simplejwt для токена
     'rest_framework',
-    'rest_framework.authtoken',
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
     #Локальные приложения
     'apps.user', #Отвечает за пользователей их инициализацию и регистрацию
     'apps.orders', #Заказы пользователей
@@ -51,12 +55,20 @@ INSTALLED_APPS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication', #Аутентификация токенами
+        'rest_framework_simplejwt.authentication.JWTAuthentication', #Аутентификация JWT для безопасности
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
     ],
     'EXCEPTION_HANDLER': 'config.exceptions.custom_exception_handler',
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60), #Время жизни валидного токена для запросов к API
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=5), #Время жизни для токена-обновления валидного токена, который нужен для запросов к API
+    'ROTATE_REFRESH_TOKENS': True, #Удаление токена-обновления после его использования
+    'BLACKLIST_AFTER_ROTATION': True, #Добавление refresh-токена в таблицу blacklist, чтобы технически нельзя было использовать старый refresh-токен
+    'ALGORITHM': 'HS256',
 }
 
 MIDDLEWARE = [
@@ -150,8 +162,4 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
 
-MAILERS = {
-    'default': {
-        'BACKEND': 'django.core.mail.backends.console.EmailBackend',
-    },
-}
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
