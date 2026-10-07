@@ -22,7 +22,7 @@ class OrderView(APIView):
 
         if not cart_item.exists(): #проверка корзины на пустоту
             return Response (
-                {"massage": "Cart is empty"},
+                {"message": "Cart is empty"},
                 status = status.HTTP_422_UNPROCESSABLE_ENTITY
             )
 

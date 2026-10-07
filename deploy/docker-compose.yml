@@ -28,12 +28,6 @@ services:
       - ../project:/app
     ports:
       - "8000:8000"
-    environment:
-      - DB_HOST=db
-      - DB_NAME=PostgresSQL_aviaproject
-      - DB_USER=admin
-      - DB_PASSWORD=admin123
-      - DB_PORT=5432
     depends_on:
       db:
         condition: service_healthy
