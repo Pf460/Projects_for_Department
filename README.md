@@ -89,7 +89,7 @@ AviaProj/
 
 Базовый URL: `http://localhost:8000/api-flight`
 
-Авторизация: заголовок `Authorization: Token <user_token>`
+Авторизация: заголовок `Authorization: Bearer <user_token>`
 
 ### Auth
 
